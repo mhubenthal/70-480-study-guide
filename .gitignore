@@ -1,0 +1,8 @@
+## Ignore Mac OS directory files
+*.DS_Store
+
+## Ignore Grunt and Node
+**/build/**
+Gruntfile.js
+**/node_modules/**
+package.json

@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-80"/>
+</head>
+<body>
+  Hello world.
+  <script>
+    var results;
+    var xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = function(){
+      console.log("test");
+      if(xhr.readyState === 4 && xhr.status === 200){
+        console.log("if test");
+        results = xhr.responseText;
+        console.log(xhr.responseText);
+      }
+    };
+    xhr.open("GET","data/curriculum.json",false);
+    xhr.send();
+  </script>
+</body>
+</html>
