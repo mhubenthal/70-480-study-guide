@@ -7,7 +7,7 @@
   app.results;
   app.currentSection;
   app.currentTopic;
-  
+  app.numFinished;
   
   // Load JSON into localStorage if not already present
   function loadData(){
@@ -19,6 +19,7 @@
           app.results = JSON.parse(xhr.responseText);
           app.currentSection = 0;
           app.currentTopic = 0;
+          app.numFinished = 0;
           window.localStorage.setItem('studyGuide',xhr.responseText);
           window.localStorage.setItem('app',JSON.stringify(app));
           displayResults(app.currentSection,app.currentTopic);
@@ -54,6 +55,12 @@
     var nextTopic = window.document.querySelector("#next-topic");
     nextTopic.addEventListener('click',function(){
       displayResults(app.currentSection,app.currentTopic+1);
+    });
+    var topicStatus = window.document.querySelector("#topic-status");
+    topicStatus.addEventListener('click',function(){
+      app.results[app.currentSection].topics[app.currentTopic].isFinished = topicStatus.checked;
+      if(topicStatus.checked){app.numFinished += 1;}
+      if(!topicStatus.checked){app.numFinished -= 1;}
     });
     var saveState = window.document.querySelector("#save-state");
     saveState.addEventListener('click',function(){
@@ -94,6 +101,15 @@
     oldTopicContent.replaceChild(topicContent,oldTopicContent.childNodes[0]);
     var oldUserContent = document.querySelector("#user-input");
     oldUserContent.value = userContent;
+    
+    // Display value of checkbox
+    var topicStatus = document.querySelector("#topic-status");
+    topicStatus.checked = app.results[app.currentSection].topics[app.currentTopic].isFinished;
+    
+    // Display number finished
+    var numFinished = document.createTextNode(app.numFinished);
+    var oldFinishedCount = document.querySelector("#current-topics");
+    oldFinishedCount.replaceChild(numFinished,oldFinishedCount.childNodes[0]);
   }
   
   // PUBLIC METHODS
