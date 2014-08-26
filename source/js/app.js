@@ -3,16 +3,17 @@
 // IIFE, declares db object on window
 (function(window){
   // Global object  
-  var app = {};
-  app.results = [];
+  window.app = {};
+  app.results;
   app.currentSection;
   app.currentTopic;
+  
   
   // Load JSON into localStorage if not already present
   function loadData(){
     // Initial visit, load data
     if(!window.localStorage.hasOwnProperty('studyGuide')){
-       var xhr = new XMLHttpRequest();
+      var xhr = new XMLHttpRequest();
       xhr.onreadystatechange = function(){
         if(xhr.readyState === 4 && xhr.status === 200){
           app.results = JSON.parse(xhr.responseText);
@@ -21,6 +22,7 @@
           window.localStorage.setItem('studyGuide',xhr.responseText);
           window.localStorage.setItem('app',JSON.stringify(app));
           displayResults(app.currentSection,app.currentTopic);
+          loadListeners(); // Load listeners on buttons
         }
       };
       xhr.open("GET","data/curriculum.json",false);
@@ -30,14 +32,12 @@
     else{
       // Get state of app
       app = JSON.parse(localStorage.getItem('app'));
-      console.log(app);
-      // Get study guide data
-      app.results = JSON.parse(localStorage.getItem('studyGuide'));
       displayResults(app.currentSection,app.currentTopic);
+      loadListeners(); // Load listeners on buttons
     }
   }
   
-  // Load event listeners for four main buttons
+  // Load event listeners for five main buttons
   function loadListeners(){
     var previousSection = window.document.querySelector("#previous-section");
     previousSection.addEventListener('click',function(){
@@ -57,38 +57,48 @@
     });
     var saveState = window.document.querySelector("#save-state");
     saveState.addEventListener('click',function(){
+      saveUserInput();
       window.localStorage.setItem('app',JSON.stringify(app));
     });
   }
   
-  // Display JSON to page
+  // Save current user input
+  function saveUserInput(){
+    var userText = document.querySelector("#user-input").value;
+    // Add user input to app object
+    app.results[app.currentSection].topics[app.currentTopic].userContent = userText;
+  }
+  
+  // Display current section and current topic
   function displayResults(section,topic){
-    // Loop back to beginning of list
-    console.log(section+' '+topic);
+    // Get content to display
     if(section===-1){app.currentSection = app.results.length-1;}
     else if(section>app.results.length-1){app.currentSection = 0;}
     else{app.currentSection = section;}
     if(topic===-1){app.currentTopic = app.results[app.currentSection].topics.length-1;}
     else if(topic>app.results[app.currentSection].topics.length-1){app.currentTopic = 0;}
     else{app.currentTopic = topic;}
+    
+    // Create textNodes for content to display
     var sectionTitle = document.createTextNode(app.results[app.currentSection].sectionTitle);
     var topicTitle = document.createTextNode(app.results[app.currentSection].topics[app.currentTopic].topicTitle);
     var topicContent = document.createTextNode(app.results[app.currentSection].topics[app.currentTopic].topicContent);
+    var userContent = app.results[app.currentSection].topics[app.currentTopic].userContent;
+    
+    // Insert textNodes and values into HTML
     var oldSectionTitle = document.querySelector(".section-title");
     oldSectionTitle.replaceChild(sectionTitle,oldSectionTitle.childNodes[0]);
     var oldTopicTitle = document.querySelector(".topic-title");
     oldTopicTitle.replaceChild(topicTitle,oldTopicTitle.childNodes[0]);
     var oldTopicContent = document.querySelector(".topic-content");
     oldTopicContent.replaceChild(topicContent,oldTopicContent.childNodes[0]);
+    var oldUserContent = document.querySelector("#user-input");
+    oldUserContent.value = userContent;
   }
   
   // PUBLIC METHODS
   
   app.load = function(){
     loadData(); // Check local storage, load JSON if not present
-    loadListeners(); // Load listeners on buttons
   };
-  
-  // Register the app object on the window.
-  window.app = app;
 }(window));
