@@ -77,7 +77,7 @@
       var newText = "Show Answer";
       var showText = "hidden";
       // Toggle button value
-      if(currentText==="Show Answer"){newText = "Hide Answer";showText="";}
+      if(currentText==="Show Answer"){newText = "Hide Answer";showText="visible";}
       var answer = document.querySelector("#user-input");
       answer.style.visibility = showText;
       showAnswer.textContent = newText;
