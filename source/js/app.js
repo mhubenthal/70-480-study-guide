@@ -40,6 +40,7 @@
   
   // Load event listeners for five main buttons
   function loadListeners(){
+    // Study guide topic navigation
     var previousSection = window.document.querySelector("#previous-section");
     previousSection.addEventListener('click',function(){
       displayResults(app.currentSection-1,0);
@@ -56,16 +57,30 @@
     nextTopic.addEventListener('click',function(){
       displayResults(app.currentSection,app.currentTopic+1);
     });
+    // Topic status
     var topicStatus = window.document.querySelector("#topic-status");
     topicStatus.addEventListener('click',function(){
       app.results[app.currentSection].topics[app.currentTopic].isFinished = topicStatus.checked;
       if(topicStatus.checked){app.numFinished += 1;}
       if(!topicStatus.checked){app.numFinished -= 1;}
     });
+    // Save state
     var saveState = window.document.querySelector("#save-state");
     saveState.addEventListener('click',function(){
       saveUserInput();
       window.localStorage.setItem('app',JSON.stringify(app));
+    });
+    // Show or hide answer
+    var showAnswer = window.document.querySelector("#show-answer");
+    showAnswer.addEventListener('click',function(){
+      var currentText = showAnswer.textContent;
+      var newText = "Show Answer";
+      var showText = "hidden";
+      // Toggle button value
+      if(currentText==="Show Answer"){newText = "Hide Answer";showText="";}
+      var answer = document.querySelector("#user-input");
+      answer.style.visibility = showText;
+      showAnswer.textContent = newText;
     });
   }
   

@@ -1,6 +1,13 @@
+body {
+  margin: 0;
+  padding: 0;
+}
 .practice-area textarea {
-  width: 100%;
+  width: 49%;
   height: 400px;
+  display: inline;
+  margin: 0;
+  padding: 0;
 }
 
 h1, h2, h3 {
@@ -21,10 +28,6 @@ form {
 
 .topic-content {
   background-color: rgba(0,0,0,.1);
-}
-
-button {
-  margin: 10px;
 }
 
 #study-status {
