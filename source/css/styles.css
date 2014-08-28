@@ -3,7 +3,7 @@ body {
   padding: 0;
 }
 .practice-area textarea {
-  width: 49%;
+  width: 100%;
   height: 460px;
   display: inline;
   margin: 0;
